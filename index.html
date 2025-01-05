@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CaddyClean Calculator</title>
+    <style>
+        /* Overall container styling */
+        .calculator-container {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: black;
+            background-color: white;
+            padding: 20px;
+            border: 1px solid black;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: auto;
+            box-sizing: border-box;
+        }
+
+        /* Fix for title to appear bold and on one line */
+        .calculator-container h1 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* Styling for form group */
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid black;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: white;
+            box-sizing: border-box;
+        }
+
+        /* Label styling */
+        .form-group label {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0;
+            color: black;
+            flex: 1;
+        }
+
+        /* Checkbox styling */
+        .form-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            border: 2px solid black;
+            border-radius: 4px;
+            cursor: pointer;
+            appearance: none;
+        }
+
+        /* Checkbox custom style when checked */
+        .form-group input[type="checkbox"]:checked {
+            background-color: black;
+        }
+
+        /* Input field styling to fix width issue */
+        .form-group input[type="number"],
+        .form-group input[type="text"] {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid black;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        /* ZIP Code specific styling */
+        #zipCodeWrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #zipCodeWrapper label {
+            flex: 0 0 100px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        #zipCodeWrapper input {
+            flex: 1;
+            max-width: 200px;
+            padding: 10px;
+            border: 1px solid black;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        /* Button styling */
+        button {
+            background-color: black;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+
+        button:hover {
+            background-color: #333;
+        }
+
+        /* Result section styling */
+        .result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            color: black;
+        }
+
+        /* Contact button styling */
+        .schedule-link {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+            margin-top: 20px;
+            color: white;
+            background-color: black;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .schedule-link:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>CaddyClean Calculator</h1>
+
+        <!-- Driveway Inputs -->
+        <div class="form-group">
+            <label for="drivewayLength">Driveway: Cars bumper-to-bumper?</label>
+            <input type="number" id="drivewayLength" placeholder="Enter number of cars">
+        </div>
+
+        <div class="form-group">
+            <label for="drivewayWidth">Driveway: Cars side-by-side?</label>
+            <input type="number" id="drivewayWidth" placeholder="Enter number of cars">
+        </div>
+
+        <!-- Garage Inputs -->
+        <div class="form-group">
+            <label for="garageCars">Garage: How many cars fit?</label>
+            <input type="number" id="garageCars" placeholder="Enter number of cars">
+        </div>
+
+        <!-- Patio Inputs -->
+        <div class="form-group">
+            <label for="patioCars">Patio: Cars that fit?</label>
+            <input type="number" id="patioCars" placeholder="Enter number of cars">
+        </div>
+
+        <!-- Fence Inputs -->
+        <div class="form-group">
+            <label for="fenceLength">Fence: Total length (ft)?</label>
+            <input type="number" id="fenceLength" placeholder="Enter length in feet">
+        </div>
+
+        <div class="form-group">
+            <label for="fenceHeight">Fence: Average height (ft)?</label>
+            <input type="number" id="fenceHeight" placeholder="Enter height in feet">
+        </div>
+
+        <!-- Button to Calculate -->
+        <button onclick="calculateSurfaceArea()">Calculate Surface Area</button>
+
+        <!-- Result Display -->
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateSurfaceArea() {
+            // Driveway Calculation
+            const drivewayLength = parseFloat(document.getElementById('drivewayLength').value) || 0;
+            const drivewayWidth = parseFloat(document.getElementById('drivewayWidth').value) || 0;
+            const drivewayArea = drivewayLength * drivewayWidth * 72; // Each car is 12x6 ft
+
+            // Garage Calculation
+            const garageCars = parseFloat(document.getElementById('garageCars').value) || 0;
+            const garageArea = garageCars * 144; // Each car is 12x12 ft
+
+            // Patio Calculation
+            const patioCars = parseFloat(document.getElementById('patioCars').value) || 0;
+            const patioArea = patioCars * 72; // Each car is 12x6 ft
+
+            // Fence Calculation
+            const fenceLength = parseFloat(document.getElementById('fenceLength').value) || 0;
+            const fenceHeight = parseFloat(document.getElementById('fenceHeight').value) || 0;
+            const fenceArea = fenceLength * fenceHeight;
+
+            // Total Surface Area
+            const totalArea = drivewayArea + garageArea + patioArea + fenceArea;
+
+            // Display Result
+            document.getElementById('result').innerText = `Total Surface Area: ${totalArea.toFixed(2)} sq. ft.`;
+        }
+    </script>
+</body>
+</html>
