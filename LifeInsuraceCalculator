@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Insurance Needs Calculator</title>
+    <style>
+        body {
+            font-family: Helvetica, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .calculator {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            font-family: Helvetica, sans-serif;
+        }
+        h3 {
+            text-align: center;
+            font-size: 20px;
+            font-family: Helvetica, sans-serif;
+            font-weight: bold;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-family: Helvetica, sans-serif;
+            font-weight: bold;
+        }
+        p {
+            font-family: Helvetica, sans-serif;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: Helvetica, sans-serif;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .question {
+            display: none;
+        }
+        .question.active {
+            display: block;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f5e9;
+            border: 1px solid #c2e0c2;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <h2>Life Insurance Needs Calculator</h2>
+
+    <div class="question active" id="question1">
+        <h3>Question 1 of 8</h3>
+        <label for="income">How much annual income would you like to provide if you were no longer here?</label>
+        <p>Think about how much money your family will need to cover daily living expenses. This is typically 60-80% of your individual post-tax income.</p>
+        <input type="number" id="income" placeholder="Enter your annual income">
+        <button onclick="nextQuestion(1)">Next</button>
+    </div>
+
+    <div class="question" id="question2">
+        <h3>Question 2 of 8</h3>
+        <label for="years">How many years should income be provided after you're gone?</label>
+        <p>Think about how long your family will need the additional income to support their daily expenses. If you have children, this might be until they graduate high school or college.</p>
+        <input type="number" id="years" placeholder="Enter number of years">
+        <button onclick="nextQuestion(2)">Next</button>
+    </div>
+
+    <div class="question" id="question3">
+        <h3>Question 3 of 8</h3>
+        <label for="debts">How much debt would you like to pay off immediately?</label>
+        <p>Consider things like outstanding mortgage, private student loans, credit card balances, and car loans.</p>
+        <input type="number" id="debts" placeholder="Enter your total debts">
+        <button onclick="nextQuestion(3)">Next</button>
+    </div>
+
+    <div class="question" id="question4">
+        <h3>Question 4 of 8</h3>
+        <label for="hasChildren">Do you have children?</label>
+        <p>If you have children, you'll be asked additional questions about childcare and college funding.</p>
+        <button onclick="nextQuestion(4, true)">Yes</button>
+        <button onclick="nextQuestion(4, false)">No</button>
+    </div>
+
+    <div class="question" id="question5">
+        <h3>Question 5 of 8</h3>
+        <label for="childcare">How much would you like to provide for childcare?</label>
+        <p>Consider how much it will cost for childcare services in your area and how long you'll need them. While young children may need full-time childcare, it may no longer be needed as they get older.</p>
+        <input type="number" id="childcare" placeholder="Enter childcare costs">
+        <button onclick="nextQuestion(5)">Next</button>
+    </div>
+
+    <div class="question" id="question6">
+        <h3>Question 6 of 8</h3>
+        <label for="college">How many children require college funding?</label>
+        <p>Add children that you would like to provide college funding for, or skip if not applicable.</p>
+        <input type="number" id="college" placeholder="Enter number of children">
+        <button onclick="nextQuestion(6)">Next</button>
+    </div>
+
+    <div class="question" id="question7">
+        <h3>Question 7 of 8</h3>
+        <label for="emergency">How much would you like to set aside for an emergency fund?</label>
+        <p>If you don't already have one, it's a good idea to set aside at least three to six months' worth of expenses in your emergency fund.</p>
+        <input type="number" id="emergency" placeholder="Enter emergency fund amount">
+        <button onclick="nextQuestion(7)">Next</button>
+    </div>
+
+    <div class="question" id="question8">
+        <h3>Question 8 of 8</h3>
+        <label for="existing">How much personal life insurance do you already have?</label>
+        <p>Do not include any life insurance policies you may have through work, since these policies will likely be eliminated when your job changes.</p>
+        <input type="number" id="existing" placeholder="Enter your existing coverage">
+        <button onclick="calculateNeeds()">Calculate Needs</button>
+    </div>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    let hasChildren = false;
+
+    function nextQuestion(current, children = null) {
+        if (children !== null) hasChildren = children;
+
+        document.getElementById(`question${current}`).classList.remove('active');
+
+        if (current === 4 && !hasChildren) {
+            document.getElementById('question7').classList.add('active');
+        } else {
+            document.getElementById(`question${current + 1}`).classList.add('active');
+        }
+    }
+
+    function calculateNeeds() {
+        const income = parseFloat(document.getElementById('income').value) || 0;
+        const years = parseInt(document.getElementById('years').value) || 0;
+        const debts = parseFloat(document.getElementById('debts').value) || 0;
+        const childcare = hasChildren ? parseFloat(document.getElementById('childcare').value) || 0 : 0;
+        const college = hasChildren ? parseInt(document.getElementById('college').value) || 0 : 0;
+        const emergency = parseFloat(document.getElementById('emergency').value) || 0;
+        const existing = parseFloat(document.getElementById('existing').value) || 0;
+
+        const totalNeeds = (income * years) + debts + childcare + (college * 50000) + emergency;
+        const coverageGap = totalNeeds - existing;
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `<h3>Your estimated life insurance need is: $${Math.max(coverageGap, 0).toLocaleString()}</h3>`;
+    }
+</script>
+
+</body>
+</html>
